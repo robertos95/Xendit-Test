@@ -3,7 +3,7 @@ An API to retreive members + retreive/modify/delete comments related info of a G
 
 # Set up
 1. Clone this repository to local machine.
-2. Paste .env file into the project folder (same level with Dockerfile, app.js)
+2. Paste the .env file (sent separately via email) into the project folder (same level with Dockerfile, app.js)
 3. By default the port will be mapped to port 9000 locally. 
 If you wish to change this port, open docker-compose.yml file and on this line:
 ```
