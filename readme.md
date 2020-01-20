@@ -18,6 +18,7 @@ docker-compose up
 ```
 5. The server has been set up. You can now call the APIs.
 *(Do remember to update the port number if you changed the default value in step 3.)*
+
 For example retrieving all comments from Xendit organization
 /GET http://localhost:9000/orgs/xendit/comments
 
