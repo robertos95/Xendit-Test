@@ -12,7 +12,7 @@ exports.getComments = (req, res, next) => {
       // If organization not found in DB
       if (!org) {
         res.status(200).json({
-          message: "Organization doesn't exist in database yet!"
+          message: "Organization doesn't exist in database yet! To add an organization to the DB, start by posting a comment to the organization!"
         });
       }
       // If organization is found in DB
@@ -80,7 +80,7 @@ exports.deleteComments = (req, res, next) => {
     // If organization not found in DB
     if (!org) {
       res.status(200).json({
-        message: "Organization doesn't exist in database yet!"
+        message: "Organization doesn't exist in database yet! To add an organization to the DB, start by posting a comment to the organization!"
       });
     }
     // If organization is found in DB
