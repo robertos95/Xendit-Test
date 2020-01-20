@@ -1,3 +1,4 @@
+var fetch = require("node-fetch");
 const mongodb = require("mongodb");
 const ObjectId = mongodb.ObjectID;
 
@@ -36,7 +37,6 @@ exports.getComments = (req, res, next) => {
 exports.postComment = (req, res, next) => {
   var comment = req.body.comment;
   var orgName = req.params.orgname;
-
   Organization.findOne({ name: orgName })
     .then(org => {
       // If organization not found, create new instance
@@ -101,4 +101,52 @@ exports.deleteComments = (req, res, next) => {
   });
 };
 
-exports.getMembers = (req, res, next) => {};
+async function getFollowersFollowing(url) {
+  let response = await fetch(url, {
+    headers: {
+      Authorization: `Bearer ${process.env.GITHUB_ACCESS_TOKEN}`
+    }
+  });
+  let data = await response.json();
+  return data.length;
+}
+
+exports.getMembers = async (req, res, next) => {
+  var orgName = req.params.orgname;
+
+  let membersResponse = await fetch(
+    "https://api.github.com/orgs/" + orgName + "/members",
+    {
+      headers: {
+        Authorization: `Bearer ${process.env.GITHUB_ACCESS_TOKEN}`
+      }
+    }
+  );
+  let membersJson = await membersResponse.json();
+
+  for (i = 0; i < membersJson.length; i++) {
+    const login = membersJson[i].login;
+    membersJson[i].followers = await getFollowersFollowing(
+      "https://api.github.com/users/" + login + "/followers"
+    );
+    membersJson[i].following = await getFollowersFollowing(
+      "https://api.github.com/users/" + login + "/following"
+    );
+  }
+  // RETRIEVE ONLY REQUIRED ATTRIBUTES
+  membersJson = membersJson.map(m => {
+    return {
+      login: m.login,
+      avatar_url: m.avatar_url,
+      followers: m.followers,
+      following: m.following
+    };
+  });
+  // SORT DESCENDING BY NUMBER OF FOLLOWERS
+  membersJson.sort((a, b) => b.followers - a.followers);
+  // console.log(membersJson);
+  res.status(200).json({
+    message: "Retrieved members successfully!",
+    members: membersJson
+  });
+};

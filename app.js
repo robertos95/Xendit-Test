@@ -2,8 +2,8 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 
-const isOrgExists = require('./middleware/is-org-exists');
-const errorController = require('./controllers/error');
+const isOrgExists = require("./middleware/is-org-exists");
+const errorController = require("./controllers/error");
 
 const dotenv = require("dotenv");
 dotenv.config();
@@ -18,26 +18,24 @@ const app = express();
 app.use(bodyParser.json());
 
 // Check if organization exists
-// if not return Error Org Not found
-
+// if not return 404 Error Org Not found
 // Else, use the orgsRoutes
 
-app.use("/orgs", isOrgExists, orgsRoutes);
+app.use("/orgs/:orgname", isOrgExists, orgsRoutes);
 
 // Error Controller
 app.use(errorController.get404);
 
-// app.listen(8080);
-// console.log(process.env.MONGO_USER);
 mongoose
   .connect(MONGODB_URI, {
     useNewUrlParser: true
   })
-  .then(result => {
-    console.log("Connected!");
-    //TODO: SET UP ENV PORT
-    app.listen(process.env.PORT || 8080);
-  })
   .catch(err => {
     console.log(err);
   });
+
+var server = app.listen(process.env.PORT || 3000, () => {
+  console.log("Connected!");
+});
+
+module.exports = server;

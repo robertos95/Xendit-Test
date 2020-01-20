@@ -2,18 +2,18 @@ const express = require('express');
 
 const orgsController = require('../controllers/orgs');
 
-const router = express.Router();
+const router = express.Router({mergeParams: true});
 
 // GET /org/:orgname/comments
-router.get('/:orgname/comments', orgsController.getComments);
+router.get('/comments', orgsController.getComments);
 
 // POST /org/:orgname/comments
-router.post('/:orgname/comments', orgsController.postComment);
+router.post('/comments', orgsController.postComment);
 
 // DELETE /org/:orgname/comments
-router.delete('/:orgname/comments', orgsController.deleteComments);
+router.delete('/comments', orgsController.deleteComments);
 
 // GET /org/:orgname/members
-router.get('/:orgname/members', orgsController.getMembers);
+router.get('/members', orgsController.getMembers);
 
 module.exports = router;
